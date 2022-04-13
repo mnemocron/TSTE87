@@ -1,6 +1,6 @@
 
-% addpath /courses/TSTE87/matlab/
-addpath ../../../newasictoolbox/
+addpath /courses/TSTE87/matlab/
+% addpath ../../../newasictoolbox/
 
 %%
 

@@ -61,7 +61,7 @@ printprecedence(sfg)
 
 %% 3 c)
 % Simulate the filter using an impulse.
-N = 64;
+N = 128;
 resp = impulseresponse(sfg, N);
 %plot(resp)
 
@@ -73,6 +73,7 @@ impulse = [1, zeros(1,N-1)];
 % What is the passband edge? Amax = 1.023 dB
 
 freqz(resp)
+% 0.4 * pi
 
 %[h,w] = freqz(resp);
 %plot(w/pi, db(h));
@@ -88,7 +89,7 @@ freqz(resp)
 
 % a node is interesting if it can overflow --> outputs of adders
 % 2, 3, 10, 12
-plot(nodes')
+plot(nodes([2,3,10,12],:)')
 grid on
 
 %% 3 g) 
@@ -246,11 +247,15 @@ random = 2*rand(1, 1024)-1;
 impulse = [1, zeros(1,N-1)];
 [output_org, outputids, registers, regids, nodes, nodeids] = simulate(sfg, impulse);
 
-node_sum = sum(abs(nodes'));
+node_sum = sqrt(sum(abs(nodes').^2));
 
 interest = [2,3,5,6,7,9,11,12,13,15,17,22,18,20];
 display(node_sum(interest))
 % all nodes are unsafe from overflowing because all are >1.0
+
+% overflows at
+% node 6,7,9,12,15,17,18,20
+
 
 %% 4 c)
 % Plot the phase-response of the two allpass branches in the same plot.
@@ -308,20 +313,28 @@ ylabel("Phase (deg)")
 % coefficients). Indicate where you introduce scaling. Note that all four 
 % sections should have as large dynamic range as possible.
 
+% overflows at
+% node 6,7,9,12,15,17,18,20
+
 sfg_s = sfg;
-sfg_s = insertoperand(sfg_s, 'constmult', 2, 1, 2^-3); % node 2 and 15 overflows
-sfg_s = insertoperand(sfg_s, 'constmult', 3, 24, 2^3);    % correct node 2 and 15 rescale
+sfg_s = insertoperand(sfg_s, 'constmult', 2, 2, 2^-2); % node 6 overflows --> scale at node 2
+sfg_s = insertoperand(sfg_s, 'constmult', 3, 5, 2^2);    % correct 6 rescale
 
-sfg_s = insertoperand(sfg_s, 'constmult', 4, 2, 0.5);  % node 9 overflows
-sfg_s = insertoperand(sfg_s, 'constmult', 5, 5, 2);    % correct node 9 rescale
+sfg_s = insertoperand(sfg_s, 'constmult', 4, 1, 0.5);  % node 15 overflows
+sfg_s = insertoperand(sfg_s, 'constmult', 5, 2, 2);    % correct node 15 rescale
+sfg_s = insertoperand(sfg_s, 'constmult', 5, 11, 2);   % correct node 15 rescale
 
-sfg_s = insertoperand(sfg_s, 'constmult', 6, 11, 2^-2);  % node 17 overflows
-sfg_s = insertoperand(sfg_s, 'constmult', 7, 22, 2^2);    % correct node 17 rescale
+sfg_s = insertoperand(sfg_s, 'constmult', 6, 11, 2^-3);  % node 17 overflows
+sfg_s = insertoperand(sfg_s, 'constmult', 7, 22, 2^3);    % correct node 17 rescale
 
 errors = checknodes(sfg)
 
 
 %dotsfgplot(sfg_s, 'eps')
+[output_org, outputids, registers, regids, nodes, nodeids] = simulate(sfg_s, impulse);
+node_sum = sqrt(sum(abs(nodes').^2));
+interest = [2,3,5,6,7,9,11,12,13,15,17,22,18,20];
+display(node_sum(interest))
 
 %% 4 f)
 % Simulate the scaled filter. What is the value of the L2-sum in the 
