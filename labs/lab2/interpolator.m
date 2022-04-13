@@ -1,6 +1,6 @@
 
-addpath /courses/TSTE87/matlab/
-% addpath ../../../newasictoolbox/
+% addpath /courses/TSTE87/matlab/
+addpath ../../../newasictoolbox/
 
 %%
 % the full upsampler has an Allpass filter first, 
@@ -72,7 +72,9 @@ sfgb = addoperand(sfgb, 'delay', 11, 20, 21);
 sfgb = addoperand(sfgb, 'add', 1, [10 22], 23);
 sfgb = addoperand(sfgb, 'out', 1, 23);
 
-%% 1 a) Simulate the impulse response 
+%% 1 a) 
+% Simulate the impulse response for the complete interpolator ﬁlter. 
+% Use the function upsample in MATLAB to expand the signal (insert zeros)
 
 resp_ap = impulseresponse(sfga, 32);
 
@@ -97,26 +99,33 @@ resp_int2 = nodes(23,:);
 % grid on
 % legend(["1^{st} stage", "full interpolator"])
 
-%% 1 b) Plot Frequency response
+%% 1 b) 
+% Plot the frequency response both for the signal after the ﬁrst 
+% interpolator stage and for the complete interpolator ﬁlter.
 [h1,w1]   = freqz(resp_int1);
-[h2,w2]   = freqz(resp_int1);
+[h2,w2]   = freqz(resp_int2);
 
 plot(w1/pi, db(h1));
 hold on
 grid on
 plot(w2/pi,db(h2))
+legend(["1x upsampled", "2x upsampled"])
+% legend(["H_{AP} + H_0", "H_{AP} + H_0 + H_0"])
 
-%% 1 c What is the passband edge
+%% 1 c) What is the passband edge for these two cases?
 
-%% 1 d) Quantize coefficients
+%% 1 d) Quantize the adaptor coeﬃcients to 11 fractional bits 
+% and plot the frequency response. 
 Wf = 11; % fractional bits
 sfga_q = sfga;
 sfgb_q = sfgb;
 
-sfga_q(2:8,7) = quant(sfga_q(2:8,7), 2^-Wf);
-sfgb_q(2:6,7) = quant(sfgb_q(2:6,7), 2^-Wf);
+% sfga_q(2:8,7) = quant(sfga_q(2:8,7), 2^-Wf);  % Deep Learning Toolbox
+% sfgb_q(2:6,7) = quant(sfgb_q(2:6,7), 2^-Wf);
+sfga_q(2:8,7) = round(sfga_q(2:8,7) .* 2^Wf) .* 2^-Wf;
+sfgb_q(2:6,7) = round(sfgb_q(2:6,7) .* 2^Wf) .* 2^-Wf;
 
-%% 1 e) How does 
+%% 1 e) How does quantization aﬀect the magnitude response?
 
 resp_ap_q = impulseresponse(sfga_q, 32);
 
@@ -133,16 +142,22 @@ resp_up2_q = upsample(resp_int1_q, 2);
 resp_int2_q = nodes(23,:);
 
 [h1q,w1q]   = freqz(resp_int1_q);
-[h2q,w2q]   = freqz(resp_int1_q);
+[h2q,w2q]   = freqz(resp_int2_q);
 
 plot(w2/pi, db(h2));
 hold on
 grid on
-plot(w2q/pi,db(h2q))
+plot(w1q/pi,db(h1q));
+plot(w2q/pi,db(h2q));
+legend(["2x upsampled", "1x upsampled (quantized)", "2x upsampled (quantized)"])
+% legend(["H_{AP} + H_0", "H_{AP} + H_0 + H_0"])
 
 % --> stopband ripple
 
-%% 1 f) Simulate random data
+%% 1 f) 
+% Simulate the complete interpolator ﬁlter using a random signal and save
+% both the input and output data. These signals will be used for reference 
+% at later design iterations.
 N = 16;
 random = 2*rand(1, N)-1;
 % quantized or not? --> yes
@@ -159,7 +174,10 @@ resp_rand_up2 = upsample(resp_rand_int1, 2);
 [output_org, outputids, registers, regids, nodes, nodeids] = simulate(sfgb_q, resp_rand_up2);
 resp_rand_int2 = nodes(23,:);
 
-%% 1 g) Plot delay values
+%% 1 g) 
+% Plot the discrete delay element values for one of the delays in the last 
+% stage bireciprocal ﬁlter and for the discrete inputs to the adder in the 
+% last stage bireciprocal ﬁlter. Comments?
 
 add_ins = [10 22];
 del_ids = [2 4 5 8 9];
@@ -167,37 +185,66 @@ del_ids = [2 4 5 8 9];
 subplot(1,2,1)
 stem(nodes(add_ins, :)')
 title("adder inputs")
+grid on
 
 subplot(1,2,2)
 stem(nodes(del_ids(1), :)')
 title("one delay stage")
+grid on
 
 % Comment
 % every other sample in the adder inputs is 0
 % can replace adder with a multiplexing switch
 
-%% 1 h) Adaptor operations per second
+%% 1 h) Determine the number of adaptor operations required per second.
 
 
 
 %% 2 a) 
+% As an intermediate design iteration we will apply polyphase decomposition 
+% to the bireciprocal ﬁlters. This results in the ﬁlter structure below. 
+% Now there are only two different sample rates, as the allpass ﬁlter and 
+% the ﬁrst bireciprocal ﬁlter runs at the same sample rate. 
+% Remember to use the quantized coeﬃcients.
+
+% Create the SFG. This can, e.g., be done by modifying the SFG:s used in Task 1.
+
 % cascading H_A and the first H_0
 % the second H_0 cannot be cascaded, 
 % so run 2 simulation steps instead of 3
+
 sfgc_q = cascadesfg(sfga_q, sfgb_q);
+% @todo: i believe the cascade function is wrong
+% the output of the sfga_q is node 20
+% but after cascading, the input of sfgb_q is taken from node 8 
+% wtf?
 
-%% b) simulate impulse response
+% new outputs are on nodes [32, 44]
 
-resp_dr_q = impulseresponse(sfgc_q, 64);
+%% b)
+% Simulate the impulse response and using your reference signal to validate 
+% that the ﬁlter has the same function as the ﬁrst design iteration. 
+% To interleave signals you can use reshape. Note that it is important to 
+% take the ﬁrst value from the correct branch. 
+N = 32;
+impulse = [1, zeros(1,N-1)];
+% resp_dr_q = impulseresponse(sfgc_q, 64); % node values are missing
+[output_org, outputids, registers, regids, nodes, nodeids] = simulate(sfgc_q, impulse);
+out_ids = [ find(nodeids==32), find(nodeids==44) ];
 
-% second upsampler
-resp_up3_q = upsample(resp_dr_q, 2);
+resp_dr_1 = reshape([nodes(out_ids(1),:);nodes(out_ids(2),:)], 1, 2*N);
+
+%%
+
 % second interpolation filter
-[output_org, outputids, registers, regids, nodes, nodeids] = simulate(sfgb_q, resp_up3_q);
-resp_int3_q = nodes(23,:);
+[output_org, outputids, registers, regids, nodes, nodeids] = simulate(sfgb_q, resp_dr_1);
+out_ids = [ find(nodeids==10), find(nodeids==22) ];
 
-[h1q,w1q]   = freqz(resp_int1_q);
-[h2q,w2q]   = freqz(resp_int1_q);
+
+resp_dr_3 = reshape([nodes(out_ids(1),:);nodes(out_ids(2),:)], 1, 4*N);
+
+[h1q,w1q]   = freqz(resp_dr_2);
+[h2q,w2q]   = freqz(resp_dr_3);
 
 plot(w2/pi, db(h2));
 hold on
@@ -206,9 +253,10 @@ plot(w2q/pi,db(h2q))
 
 
 
-
-
-
+%%
+stem(resp_int1_q)
+hold on
+stem(resp_dr_1)
 
 
 
