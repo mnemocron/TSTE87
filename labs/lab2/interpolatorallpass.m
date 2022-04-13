@@ -1,3 +1,10 @@
+
+% addpath /courses/TSTE87/matlab/
+addpath ../../../newasictoolbox/
+
+%%
+
+
 % The phase-correcting allpass filter
 
 % Adaptor coefficients

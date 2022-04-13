@@ -1,5 +1,7 @@
 %%
-addpath /courses/TSTE87/matlab/
+
+% addpath /courses/TSTE87/matlab/
+addpath ../../../newasictoolbox/
 
 %% Signal flow graph
 sfg = [];
@@ -228,7 +230,9 @@ errors = checknodes(sfg)
 N = 64;
 out1 = impulseresponse(sfg, N);
 out2 = impulseresponse(sfg_lwdf, N);
-plot(out2); hold on; plot(out1); legend
+plot(out2); hold on; grid on;
+plot(out1); 
+legend(["original","lwdf"])
 
 %% 4 b)
 % Simulate the filter using an impulse and check the values of all 
