@@ -194,31 +194,38 @@ grid on
 % so run 2 simulation steps instead of 3
 clc
 sfgc_q = cascadesfg(sfga_q, sfgb_q);
-% @todo: i believe the cascade function is wrong
-% the output of the sfga_q is node 20
-% but after cascading, the input of sfgb_q is taken from node 8 
-% wtf?
+sfgc_q = removeoperand(sfgc_q, 'out', 1);
+sfgc_q = removeoperand(sfgc_q, 'add', 1);
+sfgc_q = addoperand(sfgc_q, 'out', 1, 32);
+sfgc_q = addoperand(sfgc_q, 'out', 2, 44);
+errors = checknodes(sfgc_q)
 
-% dont use cascade
-% just simulate two filters after each other?? not viable for future labs
-% fffuuuuu
-
-% new outputs are on nodes [32, 44]
+sfgd_q = sfgb_q;
+sfgd_q = removeoperand(sfgd_q, 'out', 1);
+sfgd_q = removeoperand(sfgd_q, 'add', 1);
+sfgd_q = addoperand(sfgd_q, 'out', 1, 10);
+sfgd_q = addoperand(sfgd_q, 'out', 2, 22);
+errors = checknodes(sfgd_q)
 
 %% b)
 % Simulate the impulse response and using your reference signal to validate 
 % that the ﬁlter has the same function as the ﬁrst design iteration. 
 % To interleave signals you can use reshape. Note that it is important to 
 % take the ﬁrst value from the correct branch. 
+clc
+[output1c,outputids1,registers1,registerids1,nodes1,nodeids1] = simulate(sfgc_q, random);
+input2c = reshape([output1c(1,:);output1c(2,:)], 1, 2*N);
+[output2c,outputids2,registers2,registerids2,nodes2,nodeids2] = simulate(sfgc_q, input2c);
+output3c = reshape([output2c(1,:);output2c(2,:)], 1, 2*2*N);
 
-out_ids = [ find(nodeids1==32), find(nodeids1==44) ];
-[output1c,outputids1,registers1,registerids1,nodes1,nodeids1] = simulate(sfga_q, random);
-[output2c,outputids1,registers1,registerids1,nodes1,nodeids1] = simulate(sfgb_q, output1c);
-out_ids = [ find(nodeids1==10), find(nodeids1==22) ];
-input3c = reshape([nodes1(out_ids(2),:);nodes1(out_ids(1),:)], 1, 2*N);
-[output4c,outputids1,registers1,registerids1,nodes1,nodeids1] = simulate(sfgb_q, input3c);
 
-stem(output2r); hold on; stem(output2c)
+% out_ids = [ find(nodeids1==32), find(nodeids1==44) ];
+% input3c = reshape([nodes1(out_ids(1),:);nodes1(out_ids(2),:)], 1, 2*N);
+% [output4c,outputids1,registers1,registerids1,nodes1,nodeids1] = simulate(sfgb_q, input3c);
+% out_ids = [ find(nodeids1==10), find(nodeids1==22) ];
+% output5c = reshape([nodes1(out_ids(1),:);nodes1(out_ids(2),:)], 1, 2*2*N);
+
+stem(output3r); hold on;  stem(input2c); stem(output3c)
 %%
 input3c = reshape([output2c(2,:);output2c(1,:)],1,2*length(output2(2,:)));
 % input2c = reshape([nodes1(out_ids(2),:);nodes1(out_ids(1),:)], 1, 2*N);
@@ -249,13 +256,69 @@ plot(w2q/pi,db(h2q))
 
 
 %%
-stem(resp_int1_q)
-hold on
-stem(resp_dr_1)
+% 3 a)
 
+clear all; clc; close all;
 
+N = 128;
+impulse = [1, zeros(1,N-1)];
+random = 2*rand(1,N)-1;
 
+a10 = 0.4573;
+a11 = -0.2098;
+a12 = 0.5695;
+a13 = -0.2123;
+a14 = 0.0952;
+a15 = -0.2258;
+a16 = -0.4490;
 
+a1 = -0.068129;
+a3 = -0.242429;
+a5 = -0.461024;
+a7 = -0.678715;
+a9 = -0.888980;
+
+% quantization
+Wf = 11;
+a10 = round(a10 .* 2^Wf) .* 2^-Wf;
+a11 = round(a11 .* 2^Wf) .* 2^-Wf;
+a12 = round(a12 .* 2^Wf) .* 2^-Wf;
+a13 = round(a13 .* 2^Wf) .* 2^-Wf;
+a14 = round(a14 .* 2^Wf) .* 2^-Wf;
+a15 = round(a15 .* 2^Wf) .* 2^-Wf;
+a16 = round(a16 .* 2^Wf) .* 2^-Wf;
+a1 = round(a1 .* 2^Wf) .* 2^-Wf;
+a3 = round(a3 .* 2^Wf) .* 2^-Wf;
+a5 = round(a5 .* 2^Wf) .* 2^-Wf;
+a7 = round(a7 .* 2^Wf) .* 2^-Wf;
+a9 = round(a9 .* 2^Wf) .* 2^-Wf;
+
+sfga = [];
+
+sfga = addoperand(sfga, 'in', 1, 1);
+sfga = addoperand(sfga, 'twoport', 1, [ 1  3], [ 4  2], a10, 'symmetric');
+sfga = addoperand(sfga, 'twoport', 2, [ 4  9], [10  5], a11, 'symmetric');
+sfga = addoperand(sfga, 'twoport', 3, [ 6  8], [ 9  7], a12, 'symmetric');
+sfga = addoperand(sfga, 'twoport', 4, [10 15], [16 11], a13, 'symmetric');
+sfga = addoperand(sfga, 'twoport', 5, [12 14], [15 13], a14, 'symmetric');
+sfga = addoperand(sfga, 'twoport', 6, [16 21], [22 17], a15, 'symmetric');
+sfga = addoperand(sfga, 'twoport', 7, [18 20], [21 19], a16, 'symmetric');
+sfga = addoperand(sfga, 'delay', 1,  2,  3);
+sfga = addoperand(sfga, 'delay', 2,  5,  6);
+sfga = addoperand(sfga, 'delay', 3,  7,  8);
+sfga = addoperand(sfga, 'delay', 4, 11, 12);
+sfga = addoperand(sfga, 'delay', 5, 13, 14);
+sfga = addoperand(sfga, 'delay', 6, 17, 18);
+sfga = addoperand(sfga, 'delay', 7, 19, 20);
+% sfga = addoperand(sfga, 'out', 1, 22);
+
+% Bireciprocal low-pass filter for interpolator
+% Adaptor coefficients (all even coefficients are zero)
+a1 = -0.068129;
+a3 = -0.242429;
+a5 = -0.461024;
+a7 = -0.678715;
+a9 = -0.888980;
 
 
 
