@@ -57,7 +57,8 @@ sfg = addoperand(sfg, 'out', 5, 12);
 
 %% 3 b) 
 % Print and plot the precedence graph.
-printprecedence(sfg)
+% printprecedence(sfg)
+plotprecedence(sfg);
 
 %% 3 c)
 % Simulate the filter using an impulse.
@@ -448,12 +449,14 @@ legend(["unscaled float64", "scaled sfix16", "scaled & pipelined sfix16"])
 
 %% 4 i)
 % Plot the precedence graph for the pipelined SFG.
-printprecedence(sfg_p)
+% printprecedence(sfg_p)
+plotprecedence(sfg_p);
 
 %% 4 j)
 % Flatten the SFG and plot the precedence graph.
 
 sfg_f = flattensfg(sfg_p);
-printprecedence(sfg_f)
+% printprecedence(sfg_f)
+plotprecedence(sfg_f);
 
 
