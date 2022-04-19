@@ -271,9 +271,9 @@ legend(["4x upsampled (quantized)", "4x upsampled (commutated)"])
 
 %% 2 c) 
 % Determine the number of adaptor operations required per second.
-
+clc
 N_op_2 = 1.6e6 * 7 + 1.6e6 * 5 + 2*1.6e6 * 5
-N_op_2 / N_op_1
+1-N_op_2 / N_op_1
 % 35.2 Mega-operations per second
 % --> 40% less adaptor operations per second
 
@@ -401,8 +401,9 @@ ylim([-200 50]);
 
 %% 3 c)
 % Determine the number of adaptor operations required per second.
+clc
 N_op_3 = 1.6e6 * 7 + 1.6e6 * 5 + 1.6e6 * 10
-N_op_3 / N_op_1
+1 - N_op_3 / N_op_1
 % --> 40% less adaptor operations per second
 
 %% 3 d) 
@@ -415,18 +416,18 @@ N_op_3 / N_op_1
 
 sfg_cas = cascadesfg(sfgb, sfgc);
 sfg_cas = cascadesfg(sfga, sfg_cas);
-% plotprecedence(sfg_cas);
+plotprecedence(sfg_cas);
 
-[output1,outputids1,registers1,registerids1,nodes1,nodeids1] = simulate(sfg_cas, impulse);
-output4=reshape([getnodevalues(output1,outputids1,1);getnodevalues(output1,outputids1,2);getnodevalues(output1,outputids1,3);getnodevalues(output1,outputids1,4)],1,4*length(output1(2,:)));
-[h6,w6] = freqz(output4);
-figure
-plot(w5/pi,db(h5),'DisplayName','Commutated');
-hold on;
-plot(w6/pi,db(h6),'DisplayName','Unfolded');
-hold off;
-legend('show');
-ylim([-200 50]);
+% [output1,outputids1,registers1,registerids1,nodes1,nodeids1] = simulate(sfg_cas, impulse);
+% output4=reshape([getnodevalues(output1,outputids1,1);getnodevalues(output1,outputids1,2);getnodevalues(output1,outputids1,3);getnodevalues(output1,outputids1,4)],1,4*length(output1(2,:)));
+% [h6,w6] = freqz(output4);
+% figure
+% plot(w5/pi,db(h5),'DisplayName','Commutated');
+% hold on;
+% plot(w6/pi,db(h6),'DisplayName','Unfolded');
+% hold off;
+% legend('show');
+% ylim([-200 50]);
 
 %% 3 e)
 % Introduce pipelining such that the critical path is at most three 
