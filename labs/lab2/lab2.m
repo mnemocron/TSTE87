@@ -1,6 +1,6 @@
 
-% addpath /courses/TSTE87/matlab/
-addpath ../../../newasictoolbox/
+addpath /courses/TSTE87/matlab/
+% addpath ../../../newasictoolbox/
 
 %%
 % the full upsampler has an Allpass filter first, 
@@ -13,6 +13,7 @@ addpath ../../../newasictoolbox/
 
 %%
 clear all; clc; close all;
+format shorteng
 
 N = 128;
 impulse = [1, zeros(1,N-1)];
@@ -102,11 +103,16 @@ plot(w3/pi,db(h3))
 legend(["2x upsampled", "4x upsampled"])
 ylim([-200 50]);
 title("Task 1 b) frequency response")
+% todo xaxis
 % legend(["H_{AP} + H_0", "H_{AP} + H_0 + H_0"])
 
 %% 1 c) What is the passband edge for these two cases?
 
-%% 1 d) Quantize the adaptor coeﬃcients to 11 fractional bits 
+passbandedge2 = w2(find(db(h2) < max(db(h2))-3,1))/pi
+passbandedge3 = w3(find(db(h3) < max(db(h3))-3,1))/pi
+
+%% 1 d) 
+% Quantize the adaptor coeﬃcients to 11 fractional bits 
 % and plot the frequency response. 
 Wf = 11; % fractional bits
 sfga_q = sfga;
@@ -181,9 +187,13 @@ grid on
 % every other sample in the adder inputs is 0
 % can replace adder with a multiplexing switch
 
-%% 1 h) Determine the number of adaptor operations required per second.
+%% 1 h) 
+% Determine the number of adaptor operations required per second.
 
-
+% H_AP has 7 twoports 
+% H_0 has 5 twoports
+N_op_1 = 1.6e6 * 7 + 2*1.6e6 * 5 + 4*1.6e6 * 5
+% 59.2 Mega-operations per second
 
 %% 2 a) 
 % As an intermediate design iteration we will apply polyphase decomposition 
@@ -205,7 +215,6 @@ a3 = round(a3 .* 2^Wf) .* 2^-Wf;
 a5 = round(a5 .* 2^Wf) .* 2^-Wf;
 a7 = round(a7 .* 2^Wf) .* 2^-Wf;
 a9 = round(a9 .* 2^Wf) .* 2^-Wf;
-
 
 sfgb_c = [];
 
@@ -260,7 +269,13 @@ legend(["4x upsampled (quantized)", "4x upsampled (commutated)"])
 % legend(["original 4x upsampled", "commutaded 4x upsampled"])
 % title("Task 2 b) Simulate commutated SFG")
 
-%% 2 c)  Determine the number of adaptor operations required per second.
+%% 2 c) 
+% Determine the number of adaptor operations required per second.
+
+N_op_2 = 1.6e6 * 7 + 1.6e6 * 5 + 2*1.6e6 * 5
+N_op_2 / N_op_1
+% 35.2 Mega-operations per second
+% --> 40% less adaptor operations per second
 
 %% Task 3
 % Finally, we will realize a single rate version of the interpolator. 
@@ -334,6 +349,7 @@ sfgb = addoperand(sfgb, 'delay', 5, 14, 15);
 sfgb = addoperand(sfgb, 'out', 1, 7);
 sfgb = addoperand(sfgb, 'out', 2, 16);
 
+% unfolding transformed filter
 sfgc = [];
 
 sfgc = addoperand(sfgc, 'in', 1, 7);
@@ -378,12 +394,16 @@ output4 = reshape([ ...
 figure
 plot(w4c/pi,db(h4c),'DisplayName','Commutated');
 hold on;
+grid on;
 plot(w5/pi,db(h5),'DisplayName','Unfolded');
 legend('show');
 ylim([-200 50]);
 
 %% 3 c)
 % Determine the number of adaptor operations required per second.
+N_op_3 = 1.6e6 * 7 + 1.6e6 * 5 + 1.6e6 * 10
+N_op_3 / N_op_1
+% --> 40% less adaptor operations per second
 
 %% 3 d) 
 % Plot the precedence graph of the ﬁlter. How many two-port operations are 

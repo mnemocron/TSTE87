@@ -1,7 +1,7 @@
 %%
 
-% addpath /courses/TSTE87/matlab/
-addpath ../../../newasictoolbox/
+addpath /courses/TSTE87/matlab/
+% addpath ../../../newasictoolbox/
 
 %% Signal flow graph
 sfg = [];
@@ -74,12 +74,15 @@ impulse = [1, zeros(1,N-1)];
 % What is the passband edge? Amax = 1.023 dB
 
 freqz(resp)
+
 % 0.4 * pi
 
-%[h,w] = freqz(resp);
-%plot(w/pi, db(h));
-%hold on
-%plot([0,1], [-1.023 -1.023])
+[h,w] = freqz(resp);
+% plot(w/pi, db(h));
+% hold on
+% plot([0,1], [-1.023 -1.023])
+
+passbandedge = w(find(db(h)<-3+1.023,1))/pi
 
 %% 3 e) 
 % How large is the stopband attenuation? omega_s*T = 0.88 pi rad
@@ -268,6 +271,7 @@ resp_upper = nodes( 5,:);
 resp_lower = nodes(22,:);
 
 %hold on; grid on
+
 %stem(resp_upper)
 %stem(resp_lower)
 %legend(["upper allpass", "lower allpass"])
@@ -328,13 +332,15 @@ sfg_s = insertoperand(sfg_s, 'constmult', 5, 11, 2);   % correct node 15 rescale
 sfg_s = insertoperand(sfg_s, 'constmult', 6, 11, 2^-3);  % node 17 overflows
 sfg_s = insertoperand(sfg_s, 'constmult', 7, 22, 2^3);    % correct node 17 rescale
 
+% todo scale output back because node 23 still overflows
+
 errors = checknodes(sfg)
 
 
 %dotsfgplot(sfg_s, 'eps')
 [output_org, outputids, registers, regids, nodes, nodeids] = simulate(sfg_s, impulse);
 node_sum = sqrt(sum(abs(nodes').^2));
-interest = [2,3,5,6,7,9,11,12,13,15,17,22,18,20];
+interest = [2,3,5,6,7,9,11,12,13,15,17,22,18,20,23];
 display(node_sum(interest))
 
 %% 4 f)
@@ -355,16 +361,22 @@ plot(w1/pi, db(h1));
 hold on
 grid on
 plot(w2/pi,db(h2))
+legend
 
 %% 4 g)
 % Simulate the scaled filter with a random input. Comments? Can overflow 
 % occur in any node?
 
+% yes, L2 norm is less conservative. overflows can still occurr
 y0 = simulate(sfg,   impulse);
 y1 = simulate(sfg,   impulse, 1, [], [], [1,15]);
 y2 = simulate(sfg_s, impulse, 1, [], [], [1,15]);
-r1 = simulate(sfg,   random, 1, [], [], [1,15]);
+% y1 = simulate(sfg, impulse);
+% y2 = simulate(sfg_s, impulse);
+% r1 = simulate(sfg,   random, 1, [], [], [1,15]);
 r2 = simulate(sfg_s, random, 1, [], [], [1,15]);
+r1 = simulate(sfg, random);
+% r2 = simulate(sfg_s, random);
 
 subplot(2,2,1)
 hold on
@@ -445,7 +457,6 @@ xlabel("Normalized Frequency (x \pi rad/sample)")
 ylabel("Phase (deg)")
 legend(["unscaled float64", "scaled sfix16", "scaled & pipelined sfix16"])
 
-% Todo: comments? is this even correct?
 
 %% 4 i)
 % Plot the precedence graph for the pipelined SFG.
