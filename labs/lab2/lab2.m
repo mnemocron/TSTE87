@@ -1,6 +1,6 @@
 
-addpath /courses/TSTE87/matlab/
-% addpath ../../../newasictoolbox/
+% addpath /courses/TSTE87/matlab/
+addpath ../../../newasictoolbox/
 
 %%
 % the full upsampler has an Allpass filter first, 
@@ -103,7 +103,8 @@ plot(w3/pi,db(h3))
 legend(["2x upsampled", "4x upsampled"])
 ylim([-200 50]);
 title("Task 1 b) frequency response")
-% todo xaxis
+xlabel("Normalized Frequency (x \pi rad/sample)")
+ylabel("Magnitude (dB)")
 % legend(["H_{AP} + H_0", "H_{AP} + H_0 + H_0"])
 
 %% 1 c) What is the passband edge for these two cases?
@@ -147,6 +148,8 @@ plot(w2q/pi,db(h2q));
 plot(w3q/pi,db(h3q));
 title("Task 1 e) effect of quantization on magn response")
 legend(["2x upsampled", "4x upsampled", "2x upsampled (quantized)", "4x upsampled (quantized)"])
+xlabel("Normalized Frequency (x \pi rad/sample)")
+ylabel("Magnitude (dB)")
 % legend(["H_{AP} + H_0", "H_{AP} + H_0 + H_0"])
 
 % --> stopband ripple
@@ -260,6 +263,8 @@ grid on
 plot(w4c/pi,db(h4c));
 title("Task 1 e) effect of quantization on magn response")
 legend(["4x upsampled (quantized)", "4x upsampled (commutated)"])
+xlabel("Normalized Frequency (x \pi rad/sample)")
+ylabel("Magnitude (dB)")
 
 % figure
 % stem(output3q); 
@@ -317,62 +322,65 @@ a16 = round(a16 .* 2^Wf) .* 2^-Wf;
 sfga = [];
 
 sfga = addoperand(sfga, 'in', 1, 1);
-sfga = addoperand(sfga, 'twoport', 1, [ 1  3], [ 4  2], a10, 'symmetric');
-sfga = addoperand(sfga, 'twoport', 2, [ 4  9], [10  5], a11, 'symmetric');
-sfga = addoperand(sfga, 'twoport', 3, [ 6  8], [ 9  7], a12, 'symmetric');
-sfga = addoperand(sfga, 'twoport', 4, [10 15], [16 11], a13, 'symmetric');
-sfga = addoperand(sfga, 'twoport', 5, [12 14], [15 13], a14, 'symmetric');
-sfga = addoperand(sfga, 'twoport', 6, [16 21], [22 17], a15, 'symmetric');
-sfga = addoperand(sfga, 'twoport', 7, [18 20], [21 19], a16, 'symmetric');
-sfga = addoperand(sfga, 'delay', 1,  2,  3);
-sfga = addoperand(sfga, 'delay', 2,  5,  6);
-sfga = addoperand(sfga, 'delay', 3,  7,  8);
-sfga = addoperand(sfga, 'delay', 4, 11, 12);
-sfga = addoperand(sfga, 'delay', 5, 13, 14);
-sfga = addoperand(sfga, 'delay', 6, 17, 18);
-sfga = addoperand(sfga, 'delay', 7, 19, 20);
-sfga = addoperand(sfga, 'out', 1, 22);
+sfga = addoperand(sfga, 'twoport', 1, [ 1  12], [ 2  11], a10, 'symmetric');
+sfga = addoperand(sfga, 'twoport', 2, [ 2  22], [ 3  21], a11, 'symmetric');
+sfga = addoperand(sfga, 'twoport', 3, [31  33], [22  32], a12, 'symmetric');
+sfga = addoperand(sfga, 'twoport', 4, [ 3  42], [ 4  41], a13, 'symmetric');
+sfga = addoperand(sfga, 'twoport', 5, [51  53], [42  52], a14, 'symmetric');
+sfga = addoperand(sfga, 'twoport', 6, [ 4  62], [ 5  61], a15, 'symmetric');
+sfga = addoperand(sfga, 'twoport', 7, [71  73], [62  72], a16, 'symmetric');
+sfga = addoperand(sfga, 'delay', 11,  11,  12);
+sfga = addoperand(sfga, 'delay', 12,  21,  31);
+sfga = addoperand(sfga, 'delay', 13,  32,  33);
+sfga = addoperand(sfga, 'delay', 14,  41,  51);
+sfga = addoperand(sfga, 'delay', 15,  52,  53);
+sfga = addoperand(sfga, 'delay', 16,  61,  71);
+sfga = addoperand(sfga, 'delay', 17,  72,  73);
+sfga = addoperand(sfga, 'out', 1, 5);
+% errors = checknodes(sfga)
 
 sfgb = [];
 
-sfgb = addoperand(sfgb, 'in', 1, 1);
-sfgb = addoperand(sfgb, 'twoport', 1, [1 3], [4 2], a3, 'symmetric');
-sfgb = addoperand(sfgb, 'twoport', 2, [4 6], [7 5], a7, 'symmetric');
-sfgb = addoperand(sfgb, 'twoport', 3, [1 9], [10 8], a1, 'symmetric');
-sfgb = addoperand(sfgb, 'twoport', 4, [10 12], [13 11], a5, 'symmetric');
-sfgb = addoperand(sfgb, 'twoport', 5, [13 15], [16 14], a9, 'symmetric');
-sfgb = addoperand(sfgb, 'delay', 1, 2, 3);
-sfgb = addoperand(sfgb, 'delay', 2, 5, 6);
-sfgb = addoperand(sfgb, 'delay', 3, 8, 9);
-sfgb = addoperand(sfgb, 'delay', 4, 11, 12);
-sfgb = addoperand(sfgb, 'delay', 5, 14, 15);
-sfgb = addoperand(sfgb, 'out', 1, 7);
-sfgb = addoperand(sfgb, 'out', 2, 16);
+sfgb = addoperand(sfgb, 'in', 1, 5);
+sfgb = addoperand(sfgb, 'twoport', 11, [  5 112], [  6 111], a3, 'symmetric');
+sfgb = addoperand(sfgb, 'twoport', 12, [  6 122], [  7 121], a7, 'symmetric');
+sfgb = addoperand(sfgb, 'twoport',  8, [  5  82], [  8  81], a1, 'symmetric');
+sfgb = addoperand(sfgb, 'twoport',  9, [  8  92], [  9  91], a5, 'symmetric');
+sfgb = addoperand(sfgb, 'twoport', 10, [  9 102], [103 101], a9, 'symmetric');
+sfgb = addoperand(sfgb, 'delay', 21, 111, 112);
+sfgb = addoperand(sfgb, 'delay', 22, 121, 122);
+sfgb = addoperand(sfgb, 'delay', 23,  81,  82);
+sfgb = addoperand(sfgb, 'delay', 24,  91,  92);
+sfgb = addoperand(sfgb, 'delay', 25, 101, 102);
+sfgb = addoperand(sfgb, 'out', 1,  7);
+sfgb = addoperand(sfgb, 'out', 2, 103);
+% errors = checknodes(sfgb)
 
 % unfolding transformed filter
 sfgc = [];
 
-sfgc = addoperand(sfgc, 'in', 1, 7);
-sfgc = addoperand(sfgc, 'in', 2, 16);
-sfgc = addoperand(sfgc,'twoport',13,[16 17],[18 19],a1,'symmetric');
-sfgc = addoperand(sfgc,'twoport',14,[18 20],[21 22],a5,'symmetric');
-sfgc = addoperand(sfgc,'twoport',15,[21 23],[24 25],a9,'symmetric');
-sfgc = addoperand(sfgc,'twoport',16,[16 26],[27 28],a3,'symmetric');
-sfgc = addoperand(sfgc,'twoport',17,[27 29],[30 31],a7,'symmetric');
-sfgc = addoperand(sfgc,'twoport',18,[7 19],[32 33],a1,'symmetric');
-sfgc = addoperand(sfgc,'twoport',19,[32 22],[34 35],a5,'symmetric');
-sfgc = addoperand(sfgc,'twoport',20,[34 25],[36 37],a9,'symmetric');
-sfgc = addoperand(sfgc,'twoport',21,[7 28],[38 39],a3,'symmetric');
-sfgc = addoperand(sfgc,'twoport',22,[38 31],[40 41],a7,'symmetric');
-sfgc = addoperand(sfgc, 'delay', 1, 33, 17);
-sfgc = addoperand(sfgc, 'delay', 2, 35, 20);
-sfgc = addoperand(sfgc, 'delay', 3, 37, 23);
-sfgc = addoperand(sfgc, 'delay', 4, 39, 26);
-sfgc = addoperand(sfgc, 'delay', 5, 41, 29);
-sfgc = addoperand(sfgc, 'out', 1, 24);
-sfgc = addoperand(sfgc, 'out', 2, 30);
-sfgc = addoperand(sfgc, 'out', 3, 36);
-sfgc = addoperand(sfgc, 'out', 4, 40);
+sfgc = addoperand(sfgc, 'in', 1,   7);  
+sfgc = addoperand(sfgc, 'in', 2, 103); 
+sfgc = addoperand(sfgc,'twoport',13,[103 132],[133 131],a1,'symmetric');
+sfgc = addoperand(sfgc,'twoport',14,[133 142],[143 141],a5,'symmetric');
+sfgc = addoperand(sfgc,'twoport',15,[143 152],[400 151],a9,'symmetric');
+sfgc = addoperand(sfgc,'twoport',16,[103 162],[163 161],a3,'symmetric');
+sfgc = addoperand(sfgc,'twoport',17,[163 172],[401 171],a7,'symmetric');
+sfgc = addoperand(sfgc,'twoport',18,[  7 131],[182 183],a1,'symmetric');
+sfgc = addoperand(sfgc,'twoport',19,[182 141],[192 193],a5,'symmetric');
+sfgc = addoperand(sfgc,'twoport',20,[192 151],[402 203],a9,'symmetric');
+sfgc = addoperand(sfgc,'twoport',21,[  7 161],[212 213],a3,'symmetric');
+sfgc = addoperand(sfgc,'twoport',22,[212 171],[403 223],a7,'symmetric');
+sfgc = addoperand(sfgc, 'delay', 31, 213, 162);
+sfgc = addoperand(sfgc, 'delay', 32, 223, 172);
+sfgc = addoperand(sfgc, 'delay', 33, 183, 132);
+sfgc = addoperand(sfgc, 'delay', 34, 193, 142);
+sfgc = addoperand(sfgc, 'delay', 35, 203, 152);
+sfgc = addoperand(sfgc, 'out', 1, 400);
+sfgc = addoperand(sfgc, 'out', 2, 401);
+sfgc = addoperand(sfgc, 'out', 3, 402);
+sfgc = addoperand(sfgc, 'out', 4, 403);
+% clc; errors = checknodes(sfgc)
 
 %% 3 b)
 % Simulate the impulse response and using your reference signal to 
@@ -392,12 +400,13 @@ output4 = reshape([ ...
 
 [h5,w5] = freqz(output4);
 figure
-plot(w4c/pi,db(h4c),'DisplayName','Commutated');
+plot(w4c/pi,db(h4c), '--');
 hold on;
 grid on;
-plot(w5/pi,db(h5),'DisplayName','Unfolded');
-legend('show');
-ylim([-200 50]);
+plot(w5/pi,db(h5));
+legend(["Commutated", "Unfolded"]);
+xlabel("Normalized Frequency (x \pi rad/sample)")
+ylabel("Magnitude (dB)")
 
 %% 3 c)
 % Determine the number of adaptor operations required per second.
