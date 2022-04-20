@@ -94,6 +94,7 @@ input3 = upsample(output2,2);
 [h1,w1]   = freqz(output1);
 [h2,w2]   = freqz(output2);
 [h3,w3]   = freqz(output3);
+[p3,wp3]   = phasez(output3);
 
 figure
 plot(w2/pi, db(h2));
@@ -138,6 +139,7 @@ input3q = upsample(output2q,2);
 [h1q,w1q]   = freqz(output1q);
 [h2q,w2q]   = freqz(output2q);
 [h3q,w3q]   = freqz(output3q);
+[p3q,wp3q]   = phasez(output3q);
 
 figure
 plot(w2/pi, db(h2), '--');
@@ -255,6 +257,7 @@ input3 = reshape([output2(2,:);output2(1,:)],1,2*length(output2(2,:)));
 output4 = reshape([output3(2,:);output3(1,:)],1,2*length(output3(2,:)));
 
 [h4c,w4c]   = freqz(output4);
+[p4c,wp4c]   = phasez(output4);
 
 figure
 plot(w3q/pi, db(h3q), '--');
@@ -399,6 +402,8 @@ output4 = reshape([ ...
     1,4*length(output3(2,:)));
 
 [h5,w5] = freqz(output4);
+[p5,wp5]  = phasez(output4);
+
 figure
 plot(w4c/pi,db(h4c), '--');
 hold on;
@@ -442,14 +447,88 @@ plotprecedence(sfg_cas);
 % Introduce pipelining such that the critical path is at most three 
 % adaptors. Mark in the ﬁgure where delays are introduced. Check by 
 % plotting the precedence graph.
+clc; close all;
+
+sfga_pip = sfga;
+sfga_pip = insertoperand(sfga_pip, 'delay', 901,   3);
+sfga_pip = insertoperand(sfga_pip, 'delay', 902,   5);
+
+% plotprecedence(sfga);
+% plotprecedence(sfga_pip);
+
+sfgb_pip = sfgb;
+sfgb_pip = insertoperand(sfgb_pip, 'delay', 903,   7);
+sfgb_pip = insertoperand(sfgb_pip, 'delay', 904, 103);
+
+% plotprecedence(sfgb);
+% plotprecedence(sfgb_pip);
+
+sfgc_pip = sfgc;
+% sfgc_pip = insertoperand(sfgc_pip, 'delay', 905, 133);
+% sfgc_pip = insertoperand(sfgc_pip, 'delay', 906, 182);
+% sfgc_pip = insertoperand(sfgc_pip, 'delay', 907, 403);
+% sfgc_pip = insertoperand(sfgc_pip, 'delay', 911, 401);
+sfgc_pip = insertoperand(sfgc_pip, 'delay', 908, 143);
+sfgc_pip = insertoperand(sfgc_pip, 'delay', 909, 192);
+sfgc_pip = insertoperand(sfgc_pip, 'delay', 910, 403);
+sfgc_pip = insertoperand(sfgc_pip, 'delay', 912, 401);
+
+% plotprecedence(sfgc);
+% plotprecedence(sfgc_pip);
+
+
+sfg_pip = cascadesfg(sfgb_pip, sfgc_pip);
+sfg_pip = cascadesfg(sfga_pip, sfg_pip);
+plotprecedence(sfg_pip);
 
 
 %% 3 f)
 % Simulate the impulse response for the pipelined ﬁlter. Compare the phase 
 % response with the non-pipelined design by plotting both in the same 
 % ﬁgure. Comments?
+clc
+[output1,outputids1,registers1,registerids1,nodes1,nodeids1] = simulate(sfga_pip, impulse);
+[output2,outputids2,registers2,registerids2,nodes2,nodeids2] = simulate(sfgb_pip, output1);
+[output3,outputids3,registers3,registerids3,nodes3,nodeids3] = simulate(sfgc_pip, output2, [1;2]);
+output4 = reshape([ ...
+    getnodevalues(output3,outputids3,1); ...
+    getnodevalues(output3,outputids3,2); ...
+    getnodevalues(output3,outputids3,3); ...
+    getnodevalues(output3,outputids3,4)], ...
+    1,4*length(output3(2,:)));
 
+[h6,w6] = freqz(output4);
+[p6,wp6]   = phasez(output4);
 
+figure
+subplot(1,2,1)
+plot(w4c/pi,db(h4c), '--');
+hold on;
+grid on;
+plot(w5/pi,db(h5));
+plot(w6/pi,db(h6));
+legend(["Commutated", "Unfolded", "Pipelined"]);
+xlabel("Normalized Frequency (x \pi rad/sample)")
+ylabel("Magnitude (dB)")
 
+subplot(1,2,2)
+plot(wp5/pi, rad2deg(p5), '--');
+hold on;
+grid on;
+plot(wp5/pi, rad2deg(p5));
+plot(wp6/pi, rad2deg(p6));
+legend(["Commutated", "Unfolded", "Pipelined"]);
+xlabel("Normalized Frequency (x \pi rad/sample)")
+ylabel("Phase (deg)")
+
+% what is the difference in phase at the sampling frequency ?
+clc
+% the rightmost value is at nyquist frequency --> extent to 2x frequency
+% divide by 360 to get number of rotations
+dp = abs(rad2deg(p6(end))-rad2deg(p5(end)))/360 * 2
+% dp = 17.96 which is approximately 20
+% we introduced 5 pipeline states on 4 parallel samples
+% 5 x 4 = 20
+% the output is therefore delayed by 20 full rotations of 360 degree
 
 
