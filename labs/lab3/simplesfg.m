@@ -1,5 +1,6 @@
 
 
+clear all; close all; clc
 % addpath /courses/TSTE87/matlab/
 addpath ../../../newasictoolbox/
 
@@ -14,11 +15,13 @@ sfg=addoperand(sfg,'add',3,[6 4],7);
 sfg=addoperand(sfg,'delay',1,3,4);
 sfg=addoperand(sfg,'out',1,7);
 
-timinginfo = getdefaulttiminginfo;
+plotprecedence(sfg)
+
 %% a) 
 % Compute an initial schedule and print it. 
 % Assume latency = execution time = 2 time units.
 
+timinginfo = getdefaulttiminginfo;
 timinginfo.constmult.latency = 2;
 timinginfo.constmult.executiontime = 2;
 timinginfo.add.latency = 2;
@@ -35,8 +38,13 @@ printstarttimes(schedule)
 % Reschedule so that at most one multiplication and one addition are 
 % executed in parallel, with a schedule time of at most six time units. 
 % Note that it is possible to move outputs.
-
-
+clc
+re_schedule = schedule;
+re_schedule = changestarttime(re_schedule, 'add', 2, 2);
+re_schedule = changestarttime(re_schedule, 'constmult', 2, 2);
+re_schedule = changestarttime(re_schedule, 'add', 2, 2);
+plotschedule(re_schedule)
+printstarttimes(re_schedule)
 
 
 
