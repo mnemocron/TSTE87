@@ -114,27 +114,69 @@ printstarttimes(schedule)
 %% c)
 clc; close all;
 re_schedule = schedule;
-re_schedule = changestarttime(re_schedule, 'twoport', 9, 3);
-re_schedule = changestarttime(re_schedule, 'twoport', 7, 1);
-re_schedule = changestarttime(re_schedule, 'twoport', 8, 3);
 re_schedule = changestarttime(re_schedule, 'twoport', 2, 1);
+re_schedule = changestarttime(re_schedule, 'twoport', 3, 1);
+re_schedule = changestarttime(re_schedule, 'twoport', 1, 1);
+re_schedule = changestarttime(re_schedule, 'twoport', 5, -1);
+re_schedule = changestarttime(re_schedule, 'twoport', 4, -1);
+re_schedule = changestarttime(re_schedule, 'twoport', 6, -1);
+re_schedule = changestarttime(re_schedule, 'twoport', 7, -1);
+re_schedule = changestarttime(re_schedule, 'twoport', 8, -1);
+re_schedule = changestarttime(re_schedule, 'twoport', 9, -1);
+re_schedule = changestarttime(re_schedule, 'twoport', 10, -1);
+re_schedule = changestarttime(re_schedule, 'twoport', 11, -1);
+re_schedule = changestarttime(re_schedule, 'twoport', 12, -1);
+re_schedule = changestarttime(re_schedule, 'twoport', 16, -1);
+re_schedule = changestarttime(re_schedule, 'twoport', 21, -1);
+re_schedule = changestarttime(re_schedule, 'twoport', 1, -1);
+re_schedule = changestarttime(re_schedule, 'twoport', 5, -2);
+re_schedule = changestarttime(re_schedule, 'twoport', 3, -1);
 
-
-
-% re_schedule = changestarttime(re_schedule, 'twoport', 3, -1);
-% re_schedule = changestarttime(re_schedule, 'twoport', 5, -1);
-% re_schedule = changestarttime(re_schedule, 'twoport', 15, -1);
-% re_schedule = changestarttime(re_schedule, 'twoport', 4, -1);
-% re_schedule = changestarttime(re_schedule, 'twoport', 20, -1);
-% re_schedule = changestarttime(re_schedule, 'twoport', 6, -1);
-% re_schedule = changestarttime(re_schedule, 'twoport', 7, 1);
-% re_schedule = changestarttime(re_schedule, 'twoport', 8, -1);
-% re_schedule = changestarttime(re_schedule, 'twoport', 9, 1);
-% re_schedule = changestarttime(re_schedule, 'twoport', 2, 1);
-% re_schedule = changestarttime(re_schedule, 'twoport', 15, -1);
 plotschedule(re_schedule)
 printstarttimes(re_schedule)
 
+%% d) 
+% 4 PE required 
+
+%% c)
+clc
+timinginfo.twoport.latency = 8;
+timinginfo.twoport.executiontime = 1;
+schedule = getinitialschedule(sfg_pip, timinginfo);
+
+plotschedule(schedule)
+printstarttimes(schedule)
+%%
+clc; close all;
+re_schedule = schedule;
+re_schedule = changestarttime(re_schedule, 'twoport', 2, 4);
+re_schedule = changestarttime(re_schedule, 'twoport', 2, 4);
+re_schedule = changestarttime(re_schedule, 'twoport', 3, 4);
+re_schedule = changestarttime(re_schedule, 'twoport', 1, 4);
+re_schedule = changestarttime(re_schedule, 'twoport', 5, -4);
+re_schedule = changestarttime(re_schedule, 'twoport', 4, -4);
+re_schedule = changestarttime(re_schedule, 'twoport', 6, -4);
+re_schedule = changestarttime(re_schedule, 'twoport', 7, -4);
+re_schedule = changestarttime(re_schedule, 'twoport', 8, -4);
+re_schedule = changestarttime(re_schedule, 'twoport', 9, -4);
+re_schedule = changestarttime(re_schedule, 'twoport', 10, -4);
+re_schedule = changestarttime(re_schedule, 'twoport', 11, -4);
+re_schedule = changestarttime(re_schedule, 'twoport', 12, -4);
+re_schedule = changestarttime(re_schedule, 'twoport', 16, -4);
+re_schedule = changestarttime(re_schedule, 'twoport', 21, -4);
+re_schedule = changestarttime(re_schedule, 'twoport', 1, -4);
+re_schedule = changestarttime(re_schedule, 'twoport', 5, -8);
+re_schedule = changestarttime(re_schedule, 'twoport', 3, -4);
+
+re_schedule = changestarttime(re_schedule, 'twoport', 1, 1);
+re_schedule = changestarttime(re_schedule, 'twoport', 3, 2);
+re_schedule = changestarttime(re_schedule, 'twoport', 13, -1);
+re_schedule = changestarttime(re_schedule, 'twoport', 15, -2);
+re_schedule = changestarttime(re_schedule, 'twoport', 4, -1);
+re_schedule = changestarttime(re_schedule, 'twoport', 21, 1);
+re_schedule = changestarttime(re_schedule, 'twoport', 9, 14);
+re_schedule = changestarttime(re_schedule, 'twoport', 17, -2);
 
 
-
+plotschedule(re_schedule)
+printstarttimes(re_schedule)
