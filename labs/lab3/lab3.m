@@ -5,6 +5,9 @@ addpath ../../../newasictoolbox/
 
 %% 2
 clear; clc;
+%  In this task we will use the pipelined single rate realization of the 
+% interpolator filter from Task 3 of Laboratory work 2.
+
 % Coefficients
 a1 = -0.068129;
 a3 = -0.242429;
@@ -98,6 +101,9 @@ sfg_pip = cascadesfg(sfgb_pip, sfgc_pip);
 sfg_pip = cascadesfg(sfga_pip, sfg_pip);
 
 %% a)
+% Obtain an initial schedule with a schedule time of six time units and 
+% print it. Assume a latency of 2 time units and an 
+% execution time of 1 time unit.
 close all; clc
 timinginfo = getdefaulttiminginfo;
 timinginfo.twoport.latency = 2;
@@ -108,10 +114,13 @@ schedule = getinitialschedule(sfg_pip, timinginfo);
 plotschedule(schedule)
 printstarttimes(schedule)
 
-%% b) 
-% 9 PE required
+%% b) How many two-port processing elements are required for this schedule?
+% --> 9 PE required
 
 %% c)
+% Reschedule the operations so that there are at most four operations 
+% starting in each time slot. Note that it may help to consider the 
+% connection between different two-ports (see Lab 2).
 clc; close all;
 re_schedule = schedule;
 re_schedule = changestarttime(re_schedule, 'twoport', 2, 1);
@@ -135,23 +144,28 @@ re_schedule = changestarttime(re_schedule, 'twoport', 3, -1);
 plotschedule(re_schedule)
 printstarttimes(re_schedule)
 
-%% d) 
-% 4 PE required 
+%% d) How many two-port processing elements are required for this schedule?
+% --> 4 PE required 
 
 %% c)
 clc
 timinginfo.twoport.latency = 8;
-timinginfo.twoport.executiontime = 1;
+timinginfo.twoport.executiontime = 4;
 schedule = getinitialschedule(sfg_pip, timinginfo);
 
 plotschedule(schedule)
 printstarttimes(schedule)
-%%
-clc; close all;
+%% e)
+%  Increase the resolution of the time scale by a factor of four and 
+% reschedule the operations so that at most one operation starts 
+% in each time slot.
+
+% clc; close all;
 re_schedule = schedule;
+
+% recreate the rescheduled from above
 re_schedule = changestarttime(re_schedule, 'twoport', 2, 4);
-re_schedule = changestarttime(re_schedule, 'twoport', 2, 4);
-re_schedule = changestarttime(re_schedule, 'twoport', 3, 4);
+re_schedule = changestarttime(re_schedule, 'twoport', 3, 4); % 4
 re_schedule = changestarttime(re_schedule, 'twoport', 1, 4);
 re_schedule = changestarttime(re_schedule, 'twoport', 5, -4);
 re_schedule = changestarttime(re_schedule, 'twoport', 4, -4);
@@ -168,6 +182,8 @@ re_schedule = changestarttime(re_schedule, 'twoport', 1, -4);
 re_schedule = changestarttime(re_schedule, 'twoport', 5, -8);
 re_schedule = changestarttime(re_schedule, 'twoport', 3, -4);
 
+% % start fine re-scheduling 
+
 re_schedule = changestarttime(re_schedule, 'twoport', 1, 1);
 re_schedule = changestarttime(re_schedule, 'twoport', 3, 2);
 re_schedule = changestarttime(re_schedule, 'twoport', 13, -1);
@@ -176,7 +192,54 @@ re_schedule = changestarttime(re_schedule, 'twoport', 4, -1);
 re_schedule = changestarttime(re_schedule, 'twoport', 21, 1);
 re_schedule = changestarttime(re_schedule, 'twoport', 9, 14);
 re_schedule = changestarttime(re_schedule, 'twoport', 17, -2);
-
+re_schedule = changestarttime(re_schedule, 'twoport', 19, 1);
+re_schedule = changestarttime(re_schedule, 'twoport', 14, 1);
+re_schedule = changestarttime(re_schedule, 'twoport', 20, -1);
+re_schedule = changestarttime(re_schedule, 'twoport', 2, -2);
+re_schedule = changestarttime(re_schedule, 'twoport', 5, -1);
+re_schedule = changestarttime(re_schedule, 'twoport', 16, 1);
+re_schedule = changestarttime(re_schedule, 'twoport', 7, 4);
+re_schedule = changestarttime(re_schedule, 'twoport', 12, 1);
+re_schedule = changestarttime(re_schedule, 'twoport', 15, -3);
+re_schedule = changestarttime(re_schedule, 'twoport', 8, 2);
 
 plotschedule(re_schedule)
 printstarttimes(re_schedule)
+
+%% f) How many two-port processing elements are required for this schedule?
+% --> 4 PE required
+
+%% g) Save the final schedule! 
+% (Either using save or keep the file used to generate it)
+
+schedule = [
+[24   2 NaN NaN NaN NaN       NaN NaN NaN NaN NaN NaN NaN];
+[ 1   1   1 NaN NaN NaN       NaN NaN   0 NaN   0   0   0];
+[11   1   1  11   2	 11  0.457300   3   0   0   1   8   4];
+[11   3  21  32  22	 32  0.569500   3   0   0   2   8   4];
+[11   5  41  52  42	 52  0.095200   3   0   1  11   8   4];
+[11   7  61  72  62	 72 -0.449000   3   0   0   0   8   4];
+[11   8   5  65  15	 65 -0.242429   3   0   0  22   8   4];
+[11  10   5  56  17	 56 -0.068129   3   0   0  20   8   4];
+[11  13  64  40  25	 23 -0.068129   3   0   0  23   8   4];
+[11  15  28  45  49	 29 -0.888980   3   0   0  19   8   4];
+[11  16  64  47  36	 34 -0.242429   3   0   0  21   8   4];
+[ 2   2  50 NaN NaN NaN       NaN NaN   0 NaN   0   0   0];
+[ 2   4  55 NaN NaN NaN       NaN NaN   0 NaN   0   0   0];
+[11   2   2  22   3  21 -0.209800   3   0   0  10   8   4];
+[11   4   3  42   4  41 -0.212300   3   0   0   3   8   4];
+[11   9  15  67  16  67 -0.678715   3   0   0  18   8   4];
+[11  11  17  58  18  58 -0.461024   3   0   0   4   8   4];
+[11  14  25  44  28  26 -0.461024   3   0   0   9   8   4];
+[11  17  36  48  50  37 -0.678715   3   0   0   6   8   4];
+[11  18  16  23  39  40 -0.068129   3   0   0   8   8   4];
+[11  20  43  29  54  45 -0.888980   3   0   0   7   8   4];
+[11  21  16  34  46  47 -0.242429   3   0   0   5   8   4];
+[ 2   1  49 NaN NaN NaN       NaN NaN   0 NaN   8   0   0];
+[11   6   4  62   5  61 -0.225800   3   0   0  12   8   4];
+[11  12  18  60  64  60 -0.888980   3   0   0  13   8   4];
+[11  19  39  26  43  44 -0.461024   3   0   0  17   8   4];
+[11  22  46  37  55  48 -0.678715   3   0   0  16   8   4];
+[ 2   3  54 NaN NaN NaN       NaN NaN   0 NaN  16   0   0]];
+
+
