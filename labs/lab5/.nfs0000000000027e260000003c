@@ -1,0 +1,46 @@
+-- Memory controller generated from the DSP toolbox
+-- Electronics Systems, http://www.es.isy.liu.se/
+
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity memorycontroller1 is
+port(
+state : in integer range 0 to 3;
+adress : out integer range 0 to 1;
+enable, readwrite : out std_logic);
+end memorycontroller1;
+
+architecture generated of memorycontroller1 is
+begin
+with state select
+adress <= 
+1 when 0,
+0 when 1,
+0 when 1,
+1 when 2,
+1 when 2,
+0 when 3,
+0 when others;
+
+with state select
+readwrite <= 
+'1' when 0,
+'0' when 1,
+'1' when 1,
+'0' when 2,
+'1' when 2,
+'1' when 3,
+'-' when others;
+
+with state select
+enable <= 
+'1' when 0,
+'1' when 1,
+'1' when 1,
+'1' when 2,
+'1' when 2,
+'1' when 3,
+'0' when others;
+
+end generated;

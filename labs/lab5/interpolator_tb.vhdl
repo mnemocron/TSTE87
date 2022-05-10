@@ -8,7 +8,7 @@ entity interpolator_tb is
         -- Number of cells in memory 1
         constant cells1 : integer := 6;
         -- Number of cells in memory 2
-        constant cells2 : integer := 9;
+        constant cells2 : integer := 10;
 
         -- Schedule time
         constant scheduletime : integer := 48;
