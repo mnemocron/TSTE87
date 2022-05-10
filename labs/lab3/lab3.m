@@ -1,4 +1,4 @@
-
+getini
 clear all; close all; clc
 % addpath /courses/TSTE87/matlab/
 addpath ../../../newasictoolbox/

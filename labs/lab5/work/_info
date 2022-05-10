@@ -1,0 +1,323 @@
+m255
+K4
+z2
+!s11e vcom 2020.4 2020.10, Oct 13 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 d/home/simbu448/TSTE87/labs/lab5
+Einterpolator_tb
+Z1 w1652171727
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+R0
+Z4 8interpolator_tb.vhdl
+Z5 Finterpolator_tb.vhdl
+l0
+L4
+VjhbYne?oP@1W55I^AzXdB1
+!s100 LLPDE>Rj:?3UKd3mTdm5c3
+Z6 OL;C;10.6d;65
+31
+Z7 !s110 1652172333
+!i10b 1
+Z8 !s108 1652172333.000000
+Z9 !s90 -reportprogress|300|-93|interpolator_tb.vhdl|
+Z10 !s107 interpolator_tb.vhdl|
+!i113 0
+o-93
+Z11 tExplicit 1 CvgOpt 0
+Abehavior
+R2
+R3
+DEx4 work 15 interpolator_tb 0 22 jhbYne?oP@1W55I^AzXdB1
+31
+R7
+l106
+L24
+V`X`keh1Tihi`^0n_jf91>1
+!s100 Kj6Je>]?FW0QR9k10PlcT0
+R6
+!i10b 1
+R8
+R9
+R10
+!i113 0
+o-93
+R11
+Ememorycontroller1
+Z12 w1652171852
+R2
+R3
+R0
+Z13 8memorycontroller1.vhdl
+Z14 Fmemorycontroller1.vhdl
+l0
+L7
+VUI?ha<kH50f3FX9BT@6U?2
+!s100 D57J2H;4[REz^[gVmP<b11
+R6
+31
+Z15 !s110 1652172332
+!i10b 1
+Z16 !s108 1652172332.000000
+Z17 !s90 -reportprogress|300|-93|memorycontroller1.vhdl|
+Z18 !s107 memorycontroller1.vhdl|
+!i113 0
+o-93
+R11
+Agenerated
+R2
+R3
+DEx4 work 17 memorycontroller1 0 22 UI?ha<kH50f3FX9BT@6U?2
+31
+R15
+l15
+L14
+VZn_98iAXD@C[[=;CYc9=j2
+!s100 eAoHZ797c7F9f[<[PUDKE2
+R6
+!i10b 1
+R16
+R17
+R18
+!i113 0
+o-93
+R11
+Ememorycontroller2
+R12
+R2
+R3
+R0
+Z19 8memorycontroller2.vhdl
+Z20 Fmemorycontroller2.vhdl
+l0
+L7
+VZ6^OFFJzP83`0bA3oY=WC3
+!s100 F:Gj`GU9fD8Bh3a@]Y6QO3
+R6
+31
+R15
+!i10b 1
+R16
+Z21 !s90 -reportprogress|300|-93|memorycontroller2.vhdl|
+Z22 !s107 memorycontroller2.vhdl|
+!i113 0
+o-93
+R11
+Agenerated
+R2
+R3
+DEx4 work 17 memorycontroller2 0 22 Z6^OFFJzP83`0bA3oY=WC3
+31
+R15
+l15
+L14
+VXAOT0DgGczoYmGf;moT[J1
+!s100 ]ac:4Mg0njIWeQER=kMfI1
+R6
+!i10b 1
+R16
+R21
+R22
+!i113 0
+o-93
+R11
+Epecontroller1
+R12
+R2
+R3
+R0
+Z23 8pecontroller1.vhdl
+Z24 Fpecontroller1.vhdl
+l0
+L7
+V2?QzjH<Sg3J3U6XmzRH0S3
+!s100 NFN0mLo=ek<6zUl^?FF0?3
+R6
+31
+R15
+!i10b 1
+R16
+Z25 !s90 -reportprogress|300|-93|pecontroller1.vhdl|
+Z26 !s107 pecontroller1.vhdl|
+!i113 0
+o-93
+R11
+Agenerated
+R2
+R3
+DEx4 work 13 pecontroller1 0 22 2?QzjH<Sg3J3U6XmzRH0S3
+31
+R15
+l15
+L14
+VUn<Ya]GZLa407eY8IM>Sg1
+!s100 fDC>^eLmAWPieDK0leMkd0
+R6
+!i10b 1
+R16
+R25
+R26
+!i113 0
+o-93
+R11
+Epecontroller2
+R12
+R2
+R3
+R0
+Z27 8pecontroller2.vhdl
+Z28 Fpecontroller2.vhdl
+l0
+L7
+V7LAdTmGRS6BRJ`afhaZo41
+!s100 N8RMKcoBKORIf]@UCS<:i3
+R6
+31
+R15
+!i10b 1
+R16
+Z29 !s90 -reportprogress|300|-93|pecontroller2.vhdl|
+Z30 !s107 pecontroller2.vhdl|
+!i113 0
+o-93
+R11
+Agenerated
+R2
+R3
+DEx4 work 13 pecontroller2 0 22 7LAdTmGRS6BRJ`afhaZo41
+31
+R15
+l15
+L14
+VHC8RI@gZ^Q]9kQU>aC[?G3
+!s100 k_R5bjZ@GY>^>klYS>@ln3
+R6
+!i10b 1
+R16
+R29
+R30
+!i113 0
+o-93
+R11
+Epecontroller3
+R12
+R2
+R3
+R0
+Z31 8pecontroller3.vhdl
+Z32 Fpecontroller3.vhdl
+l0
+L7
+VA;S7a7j1^PWjDZaQ8DN=A3
+!s100 F[z=]G5dYTdI^3V5iLKYB1
+R6
+31
+R15
+!i10b 1
+R16
+Z33 !s90 -reportprogress|300|-93|pecontroller3.vhdl|
+Z34 !s107 pecontroller3.vhdl|
+!i113 0
+o-93
+R11
+Agenerated
+R2
+R3
+DEx4 work 13 pecontroller3 0 22 A;S7a7j1^PWjDZaQ8DN=A3
+31
+R15
+l15
+L14
+V]cI4Q0F@o1SUEgB1W2ikL1
+!s100 S?WmJ:Cf`nYO9W]m54e:<1
+R6
+!i10b 1
+R16
+R33
+R34
+!i113 0
+o-93
+R11
+Epecontroller4
+R12
+R2
+R3
+R0
+Z35 8pecontroller4.vhdl
+Z36 Fpecontroller4.vhdl
+l0
+L7
+VHk>:djhnA6oI5?M2]ej663
+!s100 7FgO`U;Q7KQPkTTOzF_Cg1
+R6
+31
+R7
+!i10b 1
+R16
+Z37 !s90 -reportprogress|300|-93|pecontroller4.vhdl|
+Z38 !s107 pecontroller4.vhdl|
+!i113 0
+o-93
+R11
+Agenerated
+R2
+R3
+DEx4 work 13 pecontroller4 0 22 Hk>:djhnA6oI5?M2]ej663
+31
+R7
+l15
+L14
+VC:z8IV^5dV8nQYRkc8@kl0
+!s100 P>PDH^JWZP@fzcfY]`;c:3
+R6
+!i10b 1
+R16
+R37
+R38
+!i113 0
+o-93
+R11
+Etimingcontroller
+Z39 w1652171469
+R2
+R3
+R0
+Z40 8timingcontroller.vhdl
+Z41 Ftimingcontroller.vhdl
+l0
+L7
+VkkSR3<iN=T5[NTdkFg8DS3
+!s100 @2VY]97m6<DWSoI^_eOWK3
+R6
+31
+R15
+!i10b 1
+R16
+Z42 !s90 -reportprogress|300|-93|timingcontroller.vhdl|
+Z43 !s107 timingcontroller.vhdl|
+!i113 0
+o-93
+R11
+Agenerated
+R2
+R3
+DEx4 work 16 timingcontroller 0 22 kkSR3<iN=T5[NTdkFg8DS3
+31
+R15
+l14
+L13
+V=DK3`0B1iJ@S7n4^V8FY?3
+!s100 7Z8YJQWhboDkGFc`4@V7>1
+R6
+!i10b 1
+R16
+R42
+R43
+!i113 0
+o-93
+R11
