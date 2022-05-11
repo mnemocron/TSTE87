@@ -1,9 +1,16 @@
+%**************************************************************************
+% \details     : TSTE87 ASIC for DSP lab 3 - task 2
+% \autor       : Simon Burkhardt, Justus Rossmeier
+% \file        : lab3.m
+% \date        : 2022.05.11
+%**************************************************************************
+
 getini
 clear all; close all; clc
 % addpath /courses/TSTE87/matlab/
 addpath ../../../newasictoolbox/
 
-%% 2
+%% Task 2
 clear; clc;
 %  In this task we will use the pipelined single rate realization of the 
 % interpolator filter from Task 3 of Laboratory work 2.

@@ -1,17 +1,4 @@
 
-addpath /courses/TSTE87/matlab/
-% addpath ../../../newasictoolbox/
-
-%%
-% the full upsampler has an Allpass filter first, 
-% followed by two interpolator filters H0
-%
-% [ H_AP ] --> UP2 --> [ H_0 ] --> UP2 --> [ H_AP ]
-%
-% This file is the Allpass filter
-% start here
-
-%%
 % The phase-correcting allpass filter
 % Adaptor coefficients
 a10 = 0.4573;

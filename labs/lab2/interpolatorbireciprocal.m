@@ -1,9 +1,4 @@
 
-addpath /courses/TSTE87/matlab/
-% addpath ../../../newasictoolbox/
-
-%%
-
 % Bireciprocal low-pass filter for interpolator
 
 % Adaptor coefficients (all even coefficients are zero)

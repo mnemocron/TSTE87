@@ -1,3 +1,9 @@
+%**************************************************************************
+% \details     : TSTE87 ASIC for DSP lab 2
+% \autor       : Simon Burkhardt, Justus Rossmeier
+% \file        : lab2.m
+% \date        : 2022.05.11
+%**************************************************************************
 
 % addpath /courses/TSTE87/matlab/
 addpath ../../../newasictoolbox/

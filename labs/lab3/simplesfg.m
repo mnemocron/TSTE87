@@ -1,4 +1,9 @@
-
+%**************************************************************************
+% \details     : TSTE87 ASIC for DSP lab 3 - task 1
+% \autor       : Simon Burkhardt, Justus Rossmeier
+% \file        : simplesfg.m
+% \date        : 2022.05.11
+%**************************************************************************
 
 clear all; close all; clc
 % addpath /courses/TSTE87/matlab/
