@@ -5,8 +5,8 @@
 % \date        : 2022.05.11
 %**************************************************************************
 
-% addpath /courses/TSTE87/matlab/
-addpath ../../../newasictoolbox/
+addpath /courses/TSTE87/matlab/
+% addpath ../../../newasictoolbox/
 
 %% Task 1
 % The first task is to generate VHDL descriptions of the memory and 
@@ -83,9 +83,9 @@ plotcellassignment(cellassignment_1)
 plotcellassignment(cellassignment_2)
 
 %% Task 2
-%  In this task we will use the allpass filter of the interpolator 
+% In this task we will use the allpass filter of the interpolator 
 % filter from laboratory work 2
-clear all;clc;
+clear all; clc;
 
 a10 = 0.4573;
 a11 = -0.2098;
@@ -232,17 +232,17 @@ plotschedule(schedule_p)
 
 % Resource utilization ratio
 
-% original
+% original  = 33%
 % add: 2/6
 % sub: 2/6
 % constmult: 2/6
 
-% pipelined 1x twoports
+% pipelined 1x twoports = 78%
 % add: 7/9
 % sub: 7/9
 % constmult: 7/9
 
-% pipelined 2x twoports
+% pipelined 2x twoports = 50%
 % add: 3.5/7
 % sub: 3.5/7
 % constmult: 3.5/7
